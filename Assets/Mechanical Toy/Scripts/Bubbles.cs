@@ -8,8 +8,8 @@ public class Bubbles : MonoBehaviour
     private bool isStarted; //indicates if bubbles have started
     private Vector2 bubbleSize; //holds size of the bubbles
 
-    [Range(0, 1)] //a value between 0 and 1
-    public float t;
+    private float popTime; //duration for the bubbles to pop before resetting
+    public float t; //where along we are in popTime
     // Start is called before the first frame update
     void Start()
     {
@@ -29,14 +29,14 @@ public class Bubbles : MonoBehaviour
         {
             isStarted = false;
         }
-        if (t > 1) //if time is greater than 1 it resets the time and generates a new bubble
+        if (t > popTime) //if time is greater than popTime it resets the time and generates a new bubble
         {
             t = 0;
             newBubbleSize();
         }
         if (isStarted) //if the bubbles have started update the bubbles
         {
-            transform.localScale = bubbleSize * curve.Evaluate(t); //size of the bubble based on current time and the animation curve
+            transform.localScale = bubbleSize * curve.Evaluate(t / popTime); //size of the bubble based on current time and the animation curve
             t += Time.deltaTime;
         }
     }
@@ -44,5 +44,6 @@ public class Bubbles : MonoBehaviour
     {
         float temp = Random.Range(0.8f, 1.9f); //generates random size for the bubble from 0.8 to 1.9
         bubbleSize = new Vector2(temp, temp);
+        popTime = Random.Range(1f, 1.6f); //generates random time for bubbles to pop between 1 and 1.6 seconds
     }
 }

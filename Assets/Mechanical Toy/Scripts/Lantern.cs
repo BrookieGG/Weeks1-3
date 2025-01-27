@@ -7,19 +7,41 @@ public class Lantern : MonoBehaviour
     public Vector3 startingAngle;
     public Vector3 endingAngle;
     private float t;
-    private bool swing;
-    public AnimationCurve curve;
-    //public AnimationCurve curve;
+    public float swing;
+    private bool isSwinging;
+    
     // Start is called before the first frame update
     void Start()
     {
         t = 0;
-        swing = false;
+        isSwinging = false;
     }
     // Update is called once per frame
     void Update()
     {
         t += Time.deltaTime;
-        transform.eulerAngles = Vector3.Lerp(startingAngle, endingAngle, curve.Evaluate(t));
+        {
+            if (t > swing)
+            {
+                t = 0;
+                isSwinging = !isSwinging;
+            }
+            else if (isSwinging)
+            {
+                firstSwing();
+            }
+            else
+            {
+                secondSwing();
+            }
+        }
+        void firstSwing()
+        {
+            transform.eulerAngles = Vector3.Lerp(startingAngle, endingAngle, t);
+        }
+        void secondSwing()
+        {
+            transform.eulerAngles = Vector3.Lerp(endingAngle, startingAngle, t);
+        }
     }
 }
